@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Single-page app: every route (e.g. /map, /locations) must fall back to index.html
+# so react-router can handle it client-side. Without this, refreshing on any page
+# other than "/" would 404. (public/_redirects does the same thing; this file makes
+# the build config explicit and documented rather than left to auto-detection.)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
