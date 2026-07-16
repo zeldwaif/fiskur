@@ -1,5 +1,5 @@
 /**
- * Central application configuration. Change values here — not scattered across components.
+ * Central application configuration. Change values here - not scattered across components.
  */
 export const appConfig = {
   appName: "Fiskur",
@@ -12,7 +12,7 @@ export const appConfig = {
   },
 
   map: {
-    /** Default camera — Fort Lauderdale, FL. */
+    /** Default camera - Fort Lauderdale, FL. */
     defaultCenter: { lat: 26.1224, lng: -80.1373 },
     defaultZoom: 12,
     /** "satellite" | "hybrid" | "roadmap" | "terrain" */
@@ -24,6 +24,12 @@ export const appConfig = {
   env: {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined,
     weatherApiKey: import.meta.env.VITE_WEATHER_API_KEY as string | undefined,
+  },
+
+  pwa: {
+    shortName: "Fiskur",
+    themeColor: "#ffffff",
+    backgroundColor: "#ffffff",
   },
 } as const;
 

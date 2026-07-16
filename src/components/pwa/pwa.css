@@ -1,0 +1,21 @@
+.fk-installprompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+  font-size: var(--font-size-sm);
+}
+.fk-installprompt__text {
+  color: var(--color-text-secondary);
+}
+.fk-installprompt__text strong {
+  color: var(--color-text-primary);
+}
+.fk-installprompt__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex: 0 0 auto;
+}
