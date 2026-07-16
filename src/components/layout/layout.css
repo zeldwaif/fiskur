@@ -1,0 +1,69 @@
+/* Layout primitives. These own structure/positioning only — never feature logic. */
+
+.fk-shell { display: flex; flex-direction: column; height: 100%; }
+.fk-shell__body { flex: 1; display: flex; min-height: 0; }
+
+.fk-header {
+  height: var(--header-height); flex: 0 0 auto;
+  display: flex; align-items: center; gap: var(--spacing-md);
+  padding: 0 var(--spacing-md);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background: var(--color-surface); z-index: var(--z-header);
+}
+.fk-header__brand { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+.fk-header__spacer { flex: 1; }
+
+.fk-sidebar {
+  width: var(--nav-width); flex: 0 0 auto;
+  border-right: var(--border-width) solid var(--color-border);
+  padding: var(--spacing-md) var(--spacing-sm);
+  overflow-y: auto; background: var(--color-surface);
+}
+.fk-navitem {
+  display: block; width: 100%; text-align: left;
+  padding: var(--spacing-sm); border: none; background: none;
+  color: var(--color-text-primary); text-decoration: none; cursor: pointer;
+  border-radius: var(--radius-small); font-size: var(--font-size-md);
+}
+.fk-navitem[aria-current="page"] { font-weight: var(--font-weight-bold); text-decoration: underline; }
+.fk-navitem--placeholder { color: var(--color-text-muted); }
+.fk-navitem:hover { opacity: var(--opacity-muted); }
+
+.fk-main { flex: 1; min-width: 0; min-height: 0; position: relative; overflow: auto; }
+
+.fk-maplayout { position: relative; height: 100%; width: 100%; }
+.fk-maplayout__map { position: absolute; inset: 0; z-index: var(--z-map); }
+.fk-maplayout__overlay { position: absolute; inset: 0; z-index: var(--z-map-control); pointer-events: none; }
+.fk-maplayout__overlay > * { pointer-events: auto; }
+
+.fk-floating {
+  position: absolute; background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border); border-radius: var(--radius-medium);
+  box-shadow: var(--shadow-panel); padding: var(--spacing-md); width: var(--panel-width); max-width: calc(100vw - var(--spacing-lg));
+}
+
+.fk-mobilenav {
+  height: var(--mobile-nav-height); flex: 0 0 auto;
+  display: flex; border-top: var(--border-width) solid var(--color-border);
+  background: var(--color-surface); z-index: var(--z-nav);
+}
+.fk-mobilenav__item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; font-size: var(--font-size-xs); background: none; border: none; color: var(--color-text-primary);
+  text-decoration: none; cursor: pointer;
+}
+.fk-mobilenav__item[aria-current="page"] { font-weight: var(--font-weight-bold); }
+
+.fk-sheet {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: var(--z-drawer);
+  background: var(--color-surface); border-top: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-large) var(--radius-large) 0 0; box-shadow: var(--shadow-raised);
+  transform: translateY(var(--sheet-y, calc(100% - var(--bottom-sheet-peek))));
+  transition: transform var(--motion-standard) var(--ease-emphasized);
+  max-height: 88%; display: flex; flex-direction: column;
+}
+.fk-sheet__grab { padding: var(--spacing-sm); display: grid; place-items: center; cursor: grab; }
+.fk-sheet__grab::before { content: ""; width: 36px; height: 3px; background: var(--color-border); }
+.fk-sheet__body { overflow-y: auto; padding: 0 var(--spacing-md) var(--spacing-md); }
+
+.fk-page { padding: var(--spacing-lg); max-width: 960px; margin: 0 auto; }

@@ -1,0 +1,108 @@
+/*
+  DESIGN TOKENS — the centralized visual foundation for Fiskur.
+  This is the ONLY place base colours, type, spacing, radius, motion, and z-index live.
+  Change the visual direction here; feature code never hard-codes these values.
+
+  The default (base / monochrome) theme lives on :root.
+  Additional themes are added as [data-theme="name"] blocks (see theme/themes.ts).
+*/
+:root,
+[data-theme="base"] {
+  /* --- surfaces & text --- */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-text-primary: #000000;
+  --color-text-secondary: #444444;
+  --color-text-muted: #767676;
+  --color-border: #000000;
+  --color-border-subtle: #d8d8d8;
+  --color-divider: #e6e6e6;
+
+  /* --- semantic accents (identical-ish in monochrome; restyle later) --- */
+  --color-accent: #000000;
+  --color-primary: #000000;
+  --color-primary-contrast: #ffffff;
+  --color-secondary: #444444;
+  --color-muted: #767676;
+  --color-danger: #000000;
+  --color-success: #000000;
+  --color-warning: #000000;
+  --color-focus: #000000;
+
+  /* --- map overlay tokens (map imagery stays full-colour; these style controls) --- */
+  --color-map-control-bg: #ffffff;
+  --color-map-control-text: #000000;
+  --color-map-control-border: #000000;
+  --color-map-overlay-scrim: rgba(255, 255, 255, 0.72);
+
+  /* --- typography --- */
+  --font-primary: "Times New Roman", Times, serif;
+  --font-mono: "Times New Roman", Times, serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+  --font-size-2xl: 40px;
+  --font-size-display: 64px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+  --line-height-tight: 1.1;
+  --line-height-normal: 1.5;
+
+  /* --- spacing (4/8 scale) --- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+  --spacing-2xl: 64px;
+
+  /* --- shape --- */
+  --radius-small: 0px;
+  --radius-medium: 0px;
+  --radius-large: 0px;
+  --radius-pill: 0px;
+  --border-width: 1px;
+  --border-width-strong: 2px;
+
+  /* --- elevation & opacity --- */
+  --shadow-none: none;
+  --shadow-panel: none;
+  --shadow-raised: none;
+  --opacity-disabled: 0.4;
+  --opacity-muted: 0.6;
+
+  /* --- motion (also mirrored in theme/motion.ts for JS-driven transitions) --- */
+  --motion-fast: 200ms;
+  --motion-standard: 600ms;
+  --motion-slow: 800ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0.9, 0.24, 1);
+
+  /* --- component metrics --- */
+  --control-height: 40px;
+  --control-height-sm: 32px;
+  --header-height: 52px;
+  --nav-width: 240px;
+  --nav-width-collapsed: 64px;
+  --panel-width: 360px;
+  --mobile-nav-height: 56px;
+  --bottom-sheet-peek: 200px;
+
+  /* --- z-index layers --- */
+  --z-map: 0;
+  --z-map-control: 10;
+  --z-panel: 20;
+  --z-header: 30;
+  --z-nav: 30;
+  --z-drawer: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-landing: 100;
+}
+
+/* Breakpoints are documented here and used via hooks/useMediaQuery.
+   --bp-mobile-max: 640px ; --bp-tablet-max: 1024px */

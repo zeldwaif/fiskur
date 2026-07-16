@@ -1,0 +1,16 @@
+.fk-landing {
+  position: fixed; inset: 0; z-index: var(--z-landing);
+  background: var(--color-background); color: var(--color-text-primary);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: var(--font-primary);
+  cursor: pointer;
+  transition: transform var(--motion-standard) var(--ease-emphasized);
+}
+.fk-landing--exit { transform: var(--landing-exit, translateX(-100%)); }
+.fk-landing__title { font-size: var(--font-size-display); font-weight: var(--font-weight-regular); margin: 0; letter-spacing: 0.01em; }
+.fk-landing__credit { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--spacing-sm); }
+.fk-landing__continue { position: absolute; bottom: var(--spacing-2xl); font-size: var(--font-size-sm); color: var(--color-text-muted); }
+
+/* App enters from the right as the landing exits left. */
+.fk-appenter { position: fixed; inset: 0; transform: var(--app-from, translateX(100%)); transition: transform var(--motion-standard) var(--ease-emphasized); }
+.fk-appenter--in { transform: translateX(0); }
