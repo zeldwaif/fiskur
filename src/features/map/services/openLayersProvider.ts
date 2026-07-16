@@ -8,7 +8,7 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
-import { fromLonLat } from "ol/proj";
+import { fromLonLat, toLonLat } from "ol/proj";
 import { Style, Circle as CircleStyle, Fill, Stroke } from "ol/style";
 import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType } from "../types/map.types";
 
@@ -62,6 +62,29 @@ export class OpenLayersProvider implements MapProvider {
     const center = fromLonLat([options.center.lng, options.center.lat]);
     if (options.animate) view.animate({ center, zoom: options.zoom ?? view.getZoom() });
     else { view.setCenter(center); if (options.zoom != null) view.setZoom(options.zoom); }
+  }
+  zoomBy(delta: number): void {
+    const view = this.map?.getView();
+    if (!view) return;
+    const current = view.getZoom() ?? 12;
+    view.animate({ zoom: current + delta, duration: 200 });
+  }
+  getCamera(): CameraOptions | null {
+    const view = this.map?.getView();
+    if (!view) return null;
+    const center = view.getCenter();
+    if (!center) return null;
+    const [lng, lat] = toLonLat(center);
+    return { center: { lat, lng }, zoom: view.getZoom() };
+  }
+  onCameraChange(listener: (camera: CameraOptions) => void): () => void {
+    if (!this.map) return () => {};
+    const handler = () => {
+      const cam = this.getCamera();
+      if (cam) listener(cam);
+    };
+    this.map.on("moveend", handler);
+    return () => this.map?.un("moveend", handler);
   }
   setMapType(type: MapType): void { this.base?.setSource(this.sourceFor(type)); }
   getCurrentLocation(): Promise<LatLng> {

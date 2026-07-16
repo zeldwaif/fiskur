@@ -49,6 +49,25 @@ export class GoogleMapsProvider implements MapProvider {
     if (options.animate) this.map.panTo(options.center); else this.map.setCenter(options.center);
     if (options.zoom != null) this.map.setZoom(options.zoom);
   }
+  zoomBy(delta: number): void {
+    if (!this.map) return;
+    const current = this.map.getZoom() ?? 12;
+    this.map.setZoom(current + delta);
+  }
+  getCamera(): CameraOptions | null {
+    if (!this.map) return null;
+    const center = this.map.getCenter();
+    if (!center) return null;
+    return { center: { lat: center.lat(), lng: center.lng() }, zoom: this.map.getZoom() };
+  }
+  onCameraChange(listener: (camera: CameraOptions) => void): () => void {
+    if (!this.map) return () => {};
+    const l = this.map.addListener("idle", () => {
+      const cam = this.getCamera();
+      if (cam) listener(cam);
+    });
+    return () => l.remove();
+  }
   setMapType(type: MapType): void { this.map?.setMapTypeId(type); }
   getCurrentLocation(): Promise<LatLng> {
     return new Promise((resolve, reject) => {

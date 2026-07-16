@@ -1,33 +1,47 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { appConfig } from "@/app/config";
 import { createMapProvider } from "../services/mapService";
-import type { MapProvider } from "../types/map.types";
+import { useMapContext } from "../context/MapContext";
+import { loadPersistedCamera } from "../services/mapPersistence";
 
-type Status = "loading" | "ready" | "error";
-
-/** Initializes a map provider into a container ref. Keeps provider lifecycle out of components. */
+/**
+ * Initializes a map provider into a container ref and publishes it to MapContext
+ * so sibling components (search, toolbar, layers) can drive the same live map.
+ * Restores the last camera position/zoom if one was saved.
+ */
 export function useMap(containerRef: React.RefObject<HTMLElement>) {
-  const providerRef = useRef<MapProvider | null>(null);
-  const [status, setStatus] = useState<Status>("loading");
-  const [error, setError] = useState<string | null>(null);
+  const { provider, status, error, setProvider, setStatus, setError } = useMapContext();
+  const initialized = useRef(false);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
-    const provider = createMapProvider();
-    providerRef.current = provider;
-    provider
+    if (!el || initialized.current) return;
+    initialized.current = true;
+
+    const mapProvider = createMapProvider();
+    const persisted = loadPersistedCamera();
+
+    mapProvider
       .initializeMap({
         container: el,
-        center: appConfig.map.defaultCenter,
-        zoom: appConfig.map.defaultZoom,
+        center: persisted?.center ?? appConfig.map.defaultCenter,
+        zoom: persisted?.zoom ?? appConfig.map.defaultZoom,
         mapType: appConfig.map.defaultMapType,
       })
-      .then(() => setStatus("ready"))
-      .catch((e) => { setError(e?.message ?? "Map failed to load"); setStatus("error"); });
+      .then(() => {
+        setProvider(mapProvider);
+        setStatus("ready");
+      })
+      .catch((e) => {
+        setError(e?.message ?? "Map failed to load");
+        setStatus("error");
+      });
 
-    return () => { provider.destroy(); providerRef.current = null; };
+    return () => {
+      mapProvider.destroy();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef]);
 
-  return { provider: providerRef, status, error };
+  return { provider, status, error };
 }

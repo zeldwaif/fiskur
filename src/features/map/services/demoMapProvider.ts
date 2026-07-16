@@ -27,6 +27,9 @@ export class DemoMapProvider implements MapProvider {
   removeMarker(_id: string): void {}
   clearLayer(_layerId: string): void {}
   moveCamera(_options: CameraOptions): void {}
+  zoomBy(_delta: number): void {}
+  getCamera(): CameraOptions | null { return null; }
+  onCameraChange(_listener: (camera: CameraOptions) => void): () => void { return () => {}; }
   setMapType(_type: MapType): void {}
   async getCurrentLocation(): Promise<LatLng> { return { lat: 26.1224, lng: -80.1373 }; }
   async searchLocation(_query: string): Promise<LatLng | null> { return null; }
