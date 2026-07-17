@@ -1,0 +1,13 @@
+.fk-species { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.fk-species__note { margin: 0; font-size: var(--font-size-sm); color: var(--color-text-secondary); max-width: 60ch; }
+.fk-species__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+.fk-species__card { display: flex; flex-direction: column; gap: 6px; }
+.fk-species__cardhead { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-sm); }
+.fk-species__name { margin: 0; font-size: var(--font-size-md); font-weight: 600; }
+.fk-species__sci { margin: 0; font-size: var(--font-size-sm); font-style: italic; color: var(--color-text-secondary); }
+.fk-species__habitat { margin: 0; font-size: var(--font-size-sm); color: var(--color-text-secondary); }

@@ -13,9 +13,9 @@ export interface NavItem {
 /** Ordered navigation. Desktop Sidebar and MobileNavigation both render from this. */
 export const navigationItems: NavItem[] = [
   { id: "map", label: "Map", route: "/map", feature: "map" },
-  { id: "locations", label: "Locations", route: "/locations", feature: "savedLocations", placeholder: true },
-  { id: "logs", label: "Fishing Logs", route: "/logs", feature: "fishingLogs", placeholder: true },
-  { id: "species", label: "Species", route: "/species", feature: "speciesData", placeholder: true },
+  { id: "locations", label: "Locations", route: "/locations", feature: "savedLocations" },
+  { id: "logs", label: "Fishing Logs", route: "/logs", feature: "fishingLogs" },
+  { id: "species", label: "Species", route: "/species", feature: "speciesData" },
   { id: "conditions", label: "Conditions", route: "/conditions", feature: "waterConditions", placeholder: true },
   { id: "commercial", label: "Commercial", route: "/commercial", feature: "commercialMarketplace", placeholder: true },
   { id: "profile", label: "Profile", route: "/profile", feature: "profile", placeholder: true },

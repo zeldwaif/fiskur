@@ -12,22 +12,22 @@ point of the modular architecture is that each tier can ship and be used on its 
 ## Tier 0 — Core map foundation (finish what's scaffolded)
 *The map is the spine of the app. Nothing else matters if this isn't solid.*
 
-- [ ] Wire `LocationSearch` input to `provider.searchLocation()` and move the camera to the result (`features/map/components/LocationSearch.tsx`, `hooks/useMap.ts`)
-- [ ] Wire `CurrentLocationControl` to `provider.getCurrentLocation()` + camera move, with a permission-denied fallback state
-- [ ] Wire zoom +/- buttons in `MapToolbar` to real `provider.moveCamera()` calls
+- [x] Wire `LocationSearch` input to `provider.searchLocation()` and move the camera to the result (`features/map/components/LocationSearch.tsx`, `hooks/useMap.ts`)
+- [x] Wire `CurrentLocationControl` to `provider.getCurrentLocation()` + camera move, with a permission-denied fallback state
+- [x] Wire zoom +/- buttons in `MapToolbar` to real `provider.moveCamera()` calls
 - [ ] Confirm satellite/hybrid map type switching actually works (`setMapType`)
-- [ ] Add a real `MapLayerRenderer` that draws markers per active layer from `layerRegistry.ts` (currently the registry + toggle UI exist, but layers don't render data yet)
-- [ ] Persist the user's last map position/zoom between sessions
+- [x] Add a real `MapLayerRenderer` that draws markers per active layer from `layerRegistry.ts` (currently the registry + toggle UI exist, but layers don't render data yet)
+- [x] Persist the user's last map position/zoom between sessions
 - [ ] Confirm mobile vs. desktop layouts both work (bottom sheet vs. sidebar panel positioning)
 
 ## Tier 1 — Recreational core loop (MVP)
 *The smallest version of the app someone would actually use on a real fishing trip.*
 
-- [ ] **Saved locations** — add/name/delete a pin, list view (`features/locations`)
-- [ ] **Catch logging** — manual entry: species, length, weight, date/time, location, notes (`features/catches`)
+- [x] **Saved locations** — add/name/delete a pin, list view (`features/locations`)
+- [x] **Catch logging** — manual entry: species, length, weight, date/time, location, notes (`features/catches`)
 - [ ] Photo attach to a catch log entry
 - [ ] Offline logging with later sync (log a catch with no signal, sync when back online)
-- [ ] **Species reference data** — basic species list with name, habitat, a photo (`features/species`)
+- [x] **Species reference data** — basic species list with name, habitat, a photo (`features/species`)
 - [ ] **Water/weather conditions panel** — real API wired in place of sample data (`features/weather`, `features/conditions`)
 - [ ] Tide data integration
 - [ ] Basic "what should I fish for" recommendation — even a simple rules-based version (species + condition match, no ML needed yet)
