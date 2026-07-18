@@ -22,6 +22,13 @@ export interface MapInitOptions {
   mapType: MapType;
 }
 
+/** A single geocoding suggestion shown in the search dropdown. */
+export interface LocationSuggestion {
+  id: string;
+  label: string;
+  position: LatLng;
+}
+
 /** Provider-agnostic map interface. Feature code depends on THIS, never on Google directly. */
 export interface MapProvider {
   readonly id: string;
@@ -39,5 +46,7 @@ export interface MapProvider {
   setMapType(type: MapType): void;
   getCurrentLocation(): Promise<LatLng>;
   searchLocation(query: string): Promise<LatLng | null>;
+  /** Up to a handful of candidate matches for a partial query, for a search-as-you-type dropdown. */
+  searchSuggestions(query: string): Promise<LocationSuggestion[]>;
   destroy(): void;
 }

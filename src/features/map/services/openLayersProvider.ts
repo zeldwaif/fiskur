@@ -10,7 +10,7 @@ import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
 import { fromLonLat, toLonLat } from "ol/proj";
 import { Style, Circle as CircleStyle, Fill, Stroke } from "ol/style";
-import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType } from "../types/map.types";
+import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType, LocationSuggestion } from "../types/map.types";
 
 /** Free satellite imagery (Esri World Imagery) — no API key required. */
 const ESRI_SATELLITE =
@@ -96,10 +96,28 @@ export class OpenLayersProvider implements MapProvider {
     );
   }
   async searchLocation(query: string): Promise<LatLng | null> {
-    // Free OpenStreetMap Nominatim geocoder.
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`);
+    const results = await this.geocode(query, 1);
+    return results[0] ?? null;
+  }
+  async searchSuggestions(query: string): Promise<LocationSuggestion[]> {
+    if (!query.trim()) return [];
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(query)}`,
+    );
+    const data = (await res.json()) as Array<{ place_id: number; display_name: string; lat: string; lon: string }>;
+    return data.map((d) => ({
+      id: String(d.place_id),
+      label: d.display_name,
+      position: { lat: parseFloat(d.lat), lng: parseFloat(d.lon) },
+    }));
+  }
+  /** Free OpenStreetMap Nominatim geocoder, shared by searchLocation. */
+  private async geocode(query: string, limit: number): Promise<LatLng[]> {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=${limit}&q=${encodeURIComponent(query)}`,
+    );
     const data = (await res.json()) as Array<{ lat: string; lon: string }>;
-    return data[0] ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) } : null;
+    return data.map((d) => ({ lat: parseFloat(d.lat), lng: parseFloat(d.lon) }));
   }
   destroy(): void { this.map?.setTarget(undefined); this.map = null; }
 }

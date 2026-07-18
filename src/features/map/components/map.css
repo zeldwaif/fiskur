@@ -1,8 +1,49 @@
 .fk-fishingmap { position: absolute; inset: 0; }
 .fk-fishingmap__canvas { position: absolute; inset: 0; }
-.fk-maptoolbar { display: flex; flex-direction: column; gap: var(--spacing-sm); }
-.fk-searchwrap { width: min(360px, calc(100vw - 2 * var(--spacing-md))); }
-.fk-searchwrap__hint { font-size: var(--font-size-xs); color: var(--color-text-secondary); margin: var(--spacing-xs) 0 0; }
+
+/* Single-box search control: one border for the whole thing, no nested boxes.
+   The input itself is borderless — the box IS the border. */
+.fk-searchbox {
+  position: relative;
+  width: min(360px, calc(100vw - 2 * var(--spacing-md)));
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+}
+.fk-searchbox__row { display: flex; align-items: center; gap: var(--spacing-sm); padding: 0 var(--spacing-sm); }
+.fk-searchbox__icon { color: var(--color-text-secondary); font-size: var(--font-size-md); line-height: 1; flex: 0 0 auto; }
+.fk-searchbox__input {
+  flex: 1; min-width: 0; height: var(--control-height);
+  border: none; background: none; outline: none;
+  font-family: var(--font-primary); font-size: var(--font-size-md); color: var(--color-text-primary);
+}
+.fk-searchbox__input::placeholder { color: var(--color-text-muted); }
+.fk-searchbox__suggestions {
+  list-style: none; margin: 0; padding: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  max-height: 260px; overflow-y: auto;
+}
+.fk-searchbox__suggestion {
+  padding: var(--spacing-sm); font-size: var(--font-size-sm); cursor: pointer;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fk-searchbox__suggestion + .fk-searchbox__suggestion { border-top: var(--border-width) solid var(--color-border-subtle); }
+.fk-searchbox__suggestion--active, .fk-searchbox__suggestion:hover { background: var(--color-text-primary); color: var(--color-surface); }
+.fk-searchbox__hint { font-size: var(--font-size-xs); color: var(--color-text-secondary); margin: 0; padding: var(--spacing-xs) var(--spacing-sm); border-top: var(--border-width) solid var(--color-border-subtle); }
+
+/* Segmented toolbar: one outer border, buttons are borderless with a divider between them
+   instead of each button carrying its own box. */
+.fk-maptoolbar {
+  display: flex; flex-direction: column;
+  background: var(--color-surface); border: var(--border-width) solid var(--color-border);
+  width: var(--control-height);
+}
+.fk-maptoolbar .fk-iconbtn { border: none; border-radius: 0; background: none; width: 100%; }
+.fk-maptoolbar .fk-iconbtn + .fk-iconbtn { border-top: var(--border-width) solid var(--color-border-subtle); }
+.fk-toolbar__msg {
+  font-size: var(--font-size-xs); color: var(--color-text-secondary);
+  width: 180px; text-align: right; margin-top: var(--spacing-sm);
+}
+
+.fk-layerpanel { width: min(300px, calc(100vw - 2 * var(--spacing-md))); }
 .fk-layerlist { display: flex; flex-direction: column; gap: var(--spacing-xs); margin-top: var(--spacing-sm); }
 .fk-layerrow { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); padding: var(--spacing-xs) 0; }
-.fk-toolbar__msg { font-size: var(--font-size-xs); color: var(--color-text-secondary); max-width: 160px; text-align: right; }

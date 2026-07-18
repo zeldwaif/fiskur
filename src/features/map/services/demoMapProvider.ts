@@ -1,4 +1,4 @@
-import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType } from "../types/map.types";
+import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType, LocationSuggestion } from "../types/map.types";
 
 /**
  * Fallback provider used when no Google Maps key is configured.
@@ -33,5 +33,6 @@ export class DemoMapProvider implements MapProvider {
   setMapType(_type: MapType): void {}
   async getCurrentLocation(): Promise<LatLng> { return { lat: 26.1224, lng: -80.1373 }; }
   async searchLocation(_query: string): Promise<LatLng | null> { return null; }
+  async searchSuggestions(_query: string): Promise<LocationSuggestion[]> { return []; }
   destroy(): void { if (this.container) this.container.innerHTML = ""; }
 }

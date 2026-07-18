@@ -7,7 +7,7 @@ import "./map.css";
 export function LayerSelector() {
   const { activeMapLayers, dispatch } = useAppStore();
   return (
-    <Panel>
+    <Panel className="fk-layerpanel">
       <SectionHeader title="Map Layers" />
       <div className="fk-layerlist">
         {availableLayers().map((layer) => (

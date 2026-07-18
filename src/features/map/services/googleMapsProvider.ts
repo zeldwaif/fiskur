@@ -1,4 +1,4 @@
-import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType } from "../types/map.types";
+import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType, LocationSuggestion } from "../types/map.types";
 
 let scriptPromise: Promise<void> | null = null;
 function loadGoogleMaps(apiKey: string): Promise<void> {
@@ -82,6 +82,16 @@ export class GoogleMapsProvider implements MapProvider {
     const res = await geocoder.geocode({ address: query });
     const loc = res.results[0]?.geometry.location;
     return loc ? { lat: loc.lat(), lng: loc.lng() } : null;
+  }
+  async searchSuggestions(query: string): Promise<LocationSuggestion[]> {
+    if (!query.trim()) return [];
+    const geocoder = new google.maps.Geocoder();
+    const res = await geocoder.geocode({ address: query });
+    return res.results.slice(0, 5).map((r, i) => ({
+      id: r.place_id ?? String(i),
+      label: r.formatted_address,
+      position: { lat: r.geometry.location.lat(), lng: r.geometry.location.lng() },
+    }));
   }
   destroy(): void { this.markers.forEach((m) => m.setMap(null)); this.markers.clear(); this.map = null; }
 }

@@ -20,10 +20,12 @@ export function MapScreen() {
         map={<FishingMap />}
         overlay={
           <>
-            <FloatingPanel anchor="top-left"><LocationSearch /></FloatingPanel>
-            <FloatingPanel anchor="top-right"><MapToolbar onLayers={() => setShowLayers((v) => !v)} /></FloatingPanel>
+            <FloatingPanel anchor="top-left" className="fk-floating--bare"><LocationSearch /></FloatingPanel>
+            <FloatingPanel anchor="top-right" className="fk-floating--bare">
+              <MapToolbar onLayers={() => setShowLayers((v) => !v)} />
+            </FloatingPanel>
             {showLayers && (
-              <FloatingPanel anchor={isMobile ? "bottom-left" : "bottom-right"}>
+              <FloatingPanel anchor={isMobile ? "bottom-left" : "bottom-right"} className="fk-floating--bare">
                 <LayerSelector />
               </FloatingPanel>
             )}

@@ -41,6 +41,11 @@
   border: var(--border-width) solid var(--color-border); border-radius: var(--radius-medium);
   box-shadow: var(--shadow-panel); padding: var(--spacing-md); width: var(--panel-width); max-width: calc(100vw - var(--spacing-lg));
 }
+/* Bare: positioning only — used when the child owns its own single-border chrome,
+   so we never end up with a box nested inside another box. */
+.fk-floating--bare {
+  background: none; border: none; box-shadow: none; padding: 0; width: auto; max-width: calc(100vw - var(--spacing-lg));
+}
 
 .fk-mobilenav {
   height: var(--mobile-nav-height); flex: 0 0 auto;
