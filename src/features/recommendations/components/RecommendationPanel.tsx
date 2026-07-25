@@ -1,6 +1,7 @@
 import { Panel, SectionHeader, Badge, Divider } from "@/components/ui";
 import { LoadingState, ErrorState, EmptyState } from "@/components/feedback";
 import { useRecommendations } from "../hooks/useRecommendations";
+import { MATCH_LABEL } from "../logic/recommend";
 import "./recommendations.css";
 
 export function RecommendationPanel({ lat, lng }: { lat: number; lng: number }) {
@@ -22,13 +23,17 @@ export function RecommendationPanel({ lat, lng }: { lat: number; lng: number }) 
   return (
     <Panel>
       <SectionHeader title="What to target right now" />
+      <p className="fk-reclist__method">
+        Ranked by a transparent rule set over today's light, wind, temperature and season —
+        not a trained model. Every reason below is the rule that fired.
+      </p>
       <ul className="fk-reclist">
         {recommendations.map((r, i) => (
           <li key={r.species.id} className="fk-recitem">
             <div className="fk-recitem__head">
               <span className="fk-recitem__rank">{i + 1}</span>
               <span className="fk-recitem__name">{r.species.commonName}</span>
-              {r.score > 0 && <Badge variant={i === 0 ? "primary" : "muted"}>score {r.score}</Badge>}
+              <Badge variant={r.strength === "strong" ? "primary" : "muted"}>{MATCH_LABEL[r.strength]}</Badge>
             </div>
             {r.reasons.length > 0 ? (
               <ul className="fk-recitem__reasons">

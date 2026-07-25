@@ -30,6 +30,7 @@ export class DemoMapProvider implements MapProvider {
   zoomBy(_delta: number): void {}
   getCamera(): CameraOptions | null { return null; }
   onCameraChange(_listener: (camera: CameraOptions) => void): () => void { return () => {}; }
+  onMapClick(): () => void { return () => {}; }
   setMapType(_type: MapType): void {}
   async getCurrentLocation(): Promise<LatLng> { return { lat: 43.6350, lng: -79.3750 }; }
   async searchLocation(_query: string): Promise<LatLng | null> { return null; }

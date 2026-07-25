@@ -10,11 +10,33 @@ export interface RecommendationInput {
   month: number;
 }
 
+/**
+ * Deliberately non-numeric. An earlier version surfaced the raw integer score in the UI
+ * ("score 5"), which implies a precision this model does not have — the weights below are
+ * reasoned heuristics, not values calibrated against catch data. A coarse band is an
+ * honest summary of what the rules can actually tell you.
+ */
+export type MatchStrength = "strong" | "good" | "fair";
+
 export interface Recommendation {
   species: Species;
+  /** Internal ranking value. Not for display — use `strength`. */
   score: number;
+  strength: MatchStrength;
   reasons: string[];
 }
+
+export function toStrength(score: number): MatchStrength {
+  if (score >= 5) return "strong";
+  if (score >= 3) return "good";
+  return "fair";
+}
+
+export const MATCH_LABEL: Record<MatchStrength, string> = {
+  strong: "Strong match",
+  good: "Good match",
+  fair: "Fair match",
+};
 
 /** Sep–Nov: the Lake Ontario tributary salmon run. */
 function isFallRunSeason(month: number): boolean {
@@ -114,7 +136,7 @@ export function recommendSpecies(input: RecommendationInput, candidates: Species
       }
     }
 
-    return { species: sp, score, reasons };
+    return { species: sp, score, strength: toStrength(score), reasons };
   });
 
   return results.sort((a, b) => b.score - a.score);

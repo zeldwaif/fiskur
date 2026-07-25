@@ -68,6 +68,14 @@ export class GoogleMapsProvider implements MapProvider {
     });
     return () => l.remove();
   }
+  onMapClick(listener: (position: LatLng) => void): () => void {
+    if (!this.map) return () => {};
+    const l = this.map.addListener("click", (e: any) => {
+      if (!e.latLng) return;
+      listener({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+    });
+    return () => l.remove();
+  }
   setMapType(type: MapType): void { this.map?.setMapTypeId(type); }
   getCurrentLocation(): Promise<LatLng> {
     return new Promise((resolve, reject) => {

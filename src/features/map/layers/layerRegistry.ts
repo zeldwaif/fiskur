@@ -21,6 +21,7 @@ export const mapLayers: MapLayerDef[] = [
   { id: "water-temperature", label: "Water Temperature", enabled: false, feature: "waterConditions" },
   { id: "currents", label: "Currents", enabled: false, feature: "waterConditions" },
   { id: "depth", label: "Depth / Bathymetry", enabled: false, feature: "waterConditions" },
+  { id: "my-catches", label: "My catches", enabled: true, feature: "fishingLogs" },
   { id: "daylight", label: "Light windows", enabled: false, feature: "waterConditions" },
   { id: "restricted", label: "Restricted Areas", enabled: false },
   { id: "commercial", label: "Commercial Zones", enabled: false, feature: "commercialMarketplace" },

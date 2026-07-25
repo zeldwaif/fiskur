@@ -73,3 +73,8 @@
   background: var(--color-surface); color: var(--color-text-primary);
   border: var(--border-width) solid var(--color-border);
 }
+
+.fk-catchform__pinned {
+  margin: 0; font-size: var(--font-size-sm); color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}

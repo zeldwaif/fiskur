@@ -47,3 +47,21 @@
 .fk-layerpanel { width: min(300px, calc(100vw - 2 * var(--spacing-md))); }
 .fk-layerlist { display: flex; flex-direction: column; gap: var(--spacing-xs); margin-top: var(--spacing-sm); }
 .fk-layerrow { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); padding: var(--spacing-xs) 0; }
+
+/* Quick-log panel: the map-tap entry point into the catch log. Scrollable because on a
+   phone the form is taller than the remaining map viewport. */
+.fk-quickcatch {
+  width: min(340px, calc(100vw - 2 * var(--spacing-md)));
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
+}
+.fk-maphint {
+  position: absolute; left: 50%; bottom: var(--spacing-md); transform: translateX(-50%);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-surface); border: var(--border-width) solid var(--color-border);
+  font-size: var(--font-size-xs); color: var(--color-text-secondary);
+  white-space: nowrap; pointer-events: none;
+}
+@media (max-width: 720px) {
+  .fk-maphint { display: none; }
+}

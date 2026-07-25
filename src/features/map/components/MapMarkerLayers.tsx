@@ -14,7 +14,7 @@ import type { MarkerOptions } from "../types/map.types";
  */
 export function MapMarkerLayers() {
   const { provider, status } = useMapContext();
-  const { activeMapLayers, savedLocations } = useAppStore();
+  const { activeMapLayers, savedLocations, catches } = useAppStore();
   // Track the exact marker id set drawn per layer, so we redraw when the data changes.
   const drawn = useRef<Map<string, string[]>>(new Map());
 
@@ -28,6 +28,17 @@ export function MapMarkerLayers() {
         position: { lat: loc.lat, lng: loc.lng },
         title: loc.name,
       })),
+      // Real logged catches that carry a coordinate. Catches attached to a saved spot
+      // inherit its position; catches dropped on the map carry their own exact point.
+      "my-catches": catches
+        .filter((entry): entry is typeof entry & { lat: number; lng: number } =>
+          typeof entry.lat === "number" && typeof entry.lng === "number")
+        .map((entry) => ({
+          id: `catch-${entry.id}`,
+          layerId: "my-catches",
+          position: { lat: entry.lat, lng: entry.lng },
+          title: entry.speciesName,
+        })),
     };
 
     const layerData: Record<string, MarkerOptions[]> = { ...sampleLayerMarkers, ...realLayers };
@@ -50,7 +61,7 @@ export function MapMarkerLayers() {
         drawn.current.delete(layerId);
       }
     }
-  }, [provider, status, activeMapLayers, savedLocations]);
+  }, [provider, status, activeMapLayers, savedLocations, catches]);
 
   return null;
 }

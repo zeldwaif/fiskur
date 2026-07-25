@@ -43,6 +43,8 @@ export interface MapProvider {
   getCamera(): CameraOptions | null;
   /** Fires whenever the user pans/zooms the map (for persistence, etc). Returns an unsubscribe function. */
   onCameraChange(listener: (camera: CameraOptions) => void): () => void;
+  /** Fires when the user taps/clicks a point on the map. Returns an unsubscribe function. */
+  onMapClick(listener: (position: LatLng) => void): () => void;
   setMapType(type: MapType): void;
   getCurrentLocation(): Promise<LatLng>;
   searchLocation(query: string): Promise<LatLng | null>;

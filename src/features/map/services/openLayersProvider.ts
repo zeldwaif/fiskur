@@ -86,6 +86,15 @@ export class OpenLayersProvider implements MapProvider {
     this.map.on("moveend", handler);
     return () => this.map?.un("moveend", handler);
   }
+  onMapClick(listener: (position: LatLng) => void): () => void {
+    if (!this.map) return () => {};
+    const handler = (e: any) => {
+      const [lng, lat] = toLonLat(e.coordinate);
+      listener({ lat, lng });
+    };
+    this.map.on("click", handler);
+    return () => this.map?.un("click", handler);
+  }
   setMapType(type: MapType): void { this.base?.setSource(this.sourceFor(type)); }
   getCurrentLocation(): Promise<LatLng> {
     return new Promise((resolve, reject) =>

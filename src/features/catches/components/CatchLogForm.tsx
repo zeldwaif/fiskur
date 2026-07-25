@@ -12,7 +12,18 @@ function nowLocal(): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
+interface CatchLogFormProps {
+  onLogged?: () => void;
+  /**
+   * When set, the catch is pinned to this exact point (tapped on the map) instead of
+   * being attached to a previously-saved spot. The saved-spot picker is hidden, because
+   * an explicit coordinate is strictly better information than a named spot.
+   */
+  presetPosition?: { lat: number; lng: number } | null;
+  presetLabel?: string;
+}
+
+export function CatchLogForm({ onLogged, presetPosition, presetLabel }: CatchLogFormProps) {
   const { addCatch } = useCatchLog();
   const { savedLocations } = useSavedLocations();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,6 +70,7 @@ export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
     if (weight && (!Number.isFinite(weightNum) || (weightNum ?? 0) <= 0)) return setError("Weight must be a positive number.");
 
     const loc = savedLocations.find((l) => l.id === locationId);
+    const position = presetPosition ?? (loc ? { lat: loc.lat, lng: loc.lng } : null);
 
     addCatch({
       speciesId: isOther ? OTHER_SPECIES_ID : speciesId,
@@ -66,9 +78,9 @@ export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
       lengthCm: lengthNum,
       weightKg: weightNum,
       caughtAt: new Date(caughtAt).toISOString(),
-      lat: loc?.lat,
-      lng: loc?.lng,
-      locationName: loc?.name,
+      lat: position?.lat,
+      lng: position?.lng,
+      locationName: presetPosition ? presetLabel : loc?.name,
       notes: notes.trim() || undefined,
       released,
       photoDataUrl,
@@ -109,15 +121,24 @@ export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
         <input id="catch-time" type="datetime-local" className="fk-input" value={caughtAt} onChange={(e) => setCaughtAt(e.target.value)} />
       </div>
 
-      <div className="fk-field">
-        <label className="fk-label" htmlFor="catch-loc">Location</label>
-        <select id="catch-loc" className="fk-input" value={locationId} onChange={(e) => setLocationId(e.target.value)}>
-          <option value="">No saved spot</option>
-          {savedLocations.map((l) => (
-            <option key={l.id} value={l.id}>{l.name}</option>
-          ))}
-        </select>
-      </div>
+      {presetPosition ? (
+        <div className="fk-field">
+          <span className="fk-label">Location</span>
+          <p className="fk-catchform__pinned">
+            Pinned to {presetPosition.lat.toFixed(4)}, {presetPosition.lng.toFixed(4)}
+          </p>
+        </div>
+      ) : (
+        <div className="fk-field">
+          <label className="fk-label" htmlFor="catch-loc">Location</label>
+          <select id="catch-loc" className="fk-input" value={locationId} onChange={(e) => setLocationId(e.target.value)}>
+            <option value="">No saved spot</option>
+            {savedLocations.map((l) => (
+              <option key={l.id} value={l.id}>{l.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <TextInput label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Bait, depth, conditions…" />
 

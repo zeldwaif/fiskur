@@ -22,12 +22,35 @@ export function loadPersisted<T>(key: string, isValid: (value: unknown) => value
   }
 }
 
-/** JSON-stringifies and persists a value. Never throws. */
-export function savePersisted<T>(key: string, value: T): void {
+export type SaveFailure = "quota" | "unavailable";
+export type SaveResult = { ok: true } | { ok: false; reason: SaveFailure };
+
+/** True for the various names browsers use for "you are out of localStorage". */
+function isQuotaError(e: unknown): boolean {
+  if (!(e instanceof DOMException)) return false;
+  return (
+    e.name === "QuotaExceededError" ||
+    e.name === "NS_ERROR_DOM_QUOTA_REACHED" ||
+    e.code === 22 ||
+    e.code === 1014
+  );
+}
+
+/**
+ * JSON-stringifies and persists a value. Never throws — but unlike the previous version,
+ * it no longer swallows failure silently either.
+ *
+ * This matters: photos are stored as base64 data URLs, localStorage is ~5MB, and a failed
+ * write used to leave the app showing a catch in memory that would be gone on refresh.
+ * Silently losing a user's catch log is the worst failure this app can have, so callers
+ * get a result and can tell the user.
+ */
+export function savePersisted<T>(key: string, value: T): SaveResult {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // Storage unavailable — non-fatal, just skip persisting.
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, reason: isQuotaError(e) ? "quota" : "unavailable" };
   }
 }
 
