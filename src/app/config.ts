@@ -12,8 +12,8 @@ export const appConfig = {
   },
 
   map: {
-    /** Default camera - Fort Lauderdale, FL. */
-    defaultCenter: { lat: 26.1224, lng: -80.1373 },
+    /** Default camera - Toronto Harbour / Toronto Islands, ON. */
+    defaultCenter: { lat: 43.6350, lng: -79.3750 },
     defaultZoom: 12,
     /** "satellite" | "hybrid" | "roadmap" | "terrain" */
     defaultMapType: "satellite" as const,

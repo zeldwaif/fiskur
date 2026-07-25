@@ -4,7 +4,7 @@ export interface SavedLocation {
   name: string;
   lat: number;
   lng: number;
-  /** Optional free-text note ("good on outgoing tide", etc.). */
+  /** Optional free-text note ("good at first light", etc.). */
   notes?: string;
   /** ISO timestamp of when it was saved. */
   createdAt: string;

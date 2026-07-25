@@ -25,11 +25,11 @@ point of the modular architecture is that each tier can ship and be used on its 
 
 - [x] **Saved locations** — add/name/delete a pin, list view (`features/locations`)
 - [x] **Catch logging** — manual entry: species, length, weight, date/time, location, notes (`features/catches`)
-- [ ] Photo attach to a catch log entry
+- [x] Photo attach to a catch log entry
 - [ ] Offline logging with later sync (log a catch with no signal, sync when back online)
 - [x] **Species reference data** — basic species list with name, habitat, a photo (`features/species`)
 - [x] **Water/weather conditions panel** — real API wired in place of sample data (`features/weather`, `features/conditions`)
-- [x] Tide data integration
+- [x] Daylight/feeding-window data integration (replaced tide: Lake Ontario is non-tidal)
 - [x] Basic "what should I fish for" recommendation — even a simple rules-based version (species + condition match, no ML needed yet)
 - [ ] Regulation lookup placeholder → real data source for size/season limits by species + region
 

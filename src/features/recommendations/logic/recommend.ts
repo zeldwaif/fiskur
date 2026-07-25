@@ -1,12 +1,13 @@
 import type { Species } from "@/features/catches/data/species";
-
-export type TideState = "rising" | "falling" | "slack" | "unknown";
+import type { DaylightPhase } from "@/features/conditions/types/daylight.types";
 
 export interface RecommendationInput {
-  /** Local hour, 0–23. */
-  hour: number;
-  tideState: TideState;
+  /** Derived from today's real sunrise/sunset for this location. */
+  phase: DaylightPhase | "unknown";
   windMph: number | null;
+  airTempF: number | null;
+  /** 0–11, local. Used as a coarse season signal. */
+  month: number;
 }
 
 export interface Recommendation {
@@ -15,49 +16,101 @@ export interface Recommendation {
   reasons: string[];
 }
 
+/** Sep–Nov: the Lake Ontario tributary salmon run. */
+function isFallRunSeason(month: number): boolean {
+  return month >= 8 && month <= 10;
+}
+
+/** Nov–Apr in the northern hemisphere: cold-water species are shallow and catchable. */
+function isColdSeason(month: number): boolean {
+  return month >= 10 || month <= 3;
+}
+
+/** Jun–Sep: warm-water species at peak activity. */
+function isWarmSeason(month: number): boolean {
+  return month >= 5 && month <= 8;
+}
+
 /**
- * Simple, transparent rules-based scoring — not ML, not a regulatory claim, just
- * widely-known general angling heuristics (low-light feeding windows, tide-driven
- * activity, wind's effect on sight-fishing) applied to the species reference list.
- * Every point added is paired with a plain-language reason so the recommendation
- * is explainable rather than a black box.
+ * Simple, transparent rules-based scoring — not ML, and not a regulatory claim. It applies
+ * widely-known general angling heuristics (low-light feeding windows, wind's effect on
+ * sight-fishing, cold- vs warm-water seasonality, the autumn salmon run) to the species
+ * reference list.
+ *
+ * Two deliberate design choices:
+ *  - Every point is paired with a plain-language reason, so a recommendation is explainable
+ *    rather than a black box.
+ *  - Scores can go DOWN as well as up. A model that only ever adds points will rank every
+ *    species as "good", which is the same as saying nothing.
  */
 export function recommendSpecies(input: RecommendationInput, candidates: Species[]): Recommendation[] {
-  const { hour, tideState, windMph } = input;
-  const isLowLight = (hour >= 5 && hour < 8) || (hour >= 17 && hour < 20);
-  const isBrightMidday = hour >= 10 && hour < 15;
+  const { phase, windMph, airTempF, month } = input;
+  const lowLight = phase === "dawn" || phase === "dusk";
 
   const results: Recommendation[] = candidates.map((sp) => {
     const tags = sp.tags ?? {};
     let score = 0;
     const reasons: string[] = [];
 
-    if (isLowLight && tags.lowLightFeeder) {
-      score += 2;
-      reasons.push("Low-light feeding window (dawn/dusk)");
+    // --- Light ---
+    if (lowLight && tags.lowLightFeeder) {
+      score += 3;
+      reasons.push(`In the ${phase} low-light feeding window`);
     }
-    if (isBrightMidday && tags.structureOriented) {
+    if (phase === "day" && tags.structureOriented) {
       score += 1;
-      reasons.push("Bright midday — structure-oriented feeders stay active");
+      reasons.push("Bright daylight — structure holders keep feeding");
+    }
+    if (phase === "day" && tags.lowLightFeeder) {
+      score -= 1;
+      reasons.push("Midday light — this one feeds better at dawn/dusk");
+    }
+    if (phase === "night" && !tags.lowLightFeeder) {
+      score -= 1;
+      reasons.push("After dark — not a typical window for this species");
     }
 
-    if (tideState === "rising" || tideState === "falling") {
-      if (tags.tideDependent) {
-        score += 2;
-        reasons.push(`Moving (${tideState}) tide — active feeding window`);
-      }
-    } else if (tideState === "slack" && tags.structureOriented) {
-      score += 1;
-      reasons.push("Slack tide — structure feeders less affected by current");
-    }
-
+    // --- Wind ---
     if (windMph != null) {
       if (windMph < 10 && tags.sightFishable) {
         score += 2;
-        reasons.push("Calm wind — good sight-fishing visibility");
-      } else if (windMph >= 15 && tags.windTolerant) {
-        score += 1;
-        reasons.push("Handles wind/chop well");
+        reasons.push("Calm water — good sight-fishing visibility");
+      }
+      if (windMph >= 15) {
+        if (tags.windTolerant) {
+          score += 1;
+          reasons.push("Handles wind and chop well");
+        }
+        if (tags.sightFishable) {
+          score -= 2;
+          reasons.push("Chop is killing sight-fishing visibility");
+        }
+      }
+    }
+
+    // --- Season and temperature ---
+    if (tags.fallRun && isFallRunSeason(month)) {
+      score += 3;
+      reasons.push("Autumn run — staging nearshore and entering tributaries");
+    }
+    if (tags.coldWater) {
+      if (isColdSeason(month)) {
+        score += 2;
+        reasons.push("Cold season — cold-water species are shallow and active");
+      }
+      if (airTempF != null && airTempF > 75) {
+        score -= 2;
+        reasons.push("Warm spell — these fish push out to deep, cold water");
+      }
+    }
+    if (tags.warmWater) {
+      if (isWarmSeason(month)) {
+        score += 2;
+        reasons.push("Warm season — peak activity for this species");
+      }
+      if (airTempF != null && airTempF < 45) {
+        score -= 2;
+        reasons.push("Cold water — warm-water species are sluggish");
       }
     }
 

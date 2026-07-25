@@ -1,8 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Button, TextInput, Toggle } from "@/components/ui";
 import { useCatchLog } from "../hooks/useCatchLog";
 import { species, getSpecies, OTHER_SPECIES_ID } from "../data/species";
 import { useSavedLocations } from "@/features/locations/hooks/useSavedLocations";
+import { readAndDownscaleImage } from "../photo";
 
 /** Current local datetime as a value for <input type="datetime-local">. */
 function nowLocal(): string {
@@ -14,6 +15,7 @@ function nowLocal(): string {
 export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
   const { addCatch } = useCatchLog();
   const { savedLocations } = useSavedLocations();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [speciesId, setSpeciesId] = useState(species[0]?.id ?? OTHER_SPECIES_ID);
   const [otherName, setOtherName] = useState("");
@@ -23,7 +25,26 @@ export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
   const [locationId, setLocationId] = useState("");
   const [notes, setNotes] = useState("");
   const [released, setReleased] = useState(true);
+  const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>(undefined);
+  const [photoBusy, setPhotoBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-selecting the same file later
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return setError("Please choose an image file.");
+    setPhotoBusy(true);
+    setError(null);
+    try {
+      const dataUrl = await readAndDownscaleImage(file);
+      setPhotoDataUrl(dataUrl);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't process that photo.");
+    } finally {
+      setPhotoBusy(false);
+    }
+  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -50,12 +71,14 @@ export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
       locationName: loc?.name,
       notes: notes.trim() || undefined,
       released,
+      photoDataUrl,
     });
 
     setLength("");
     setWeight("");
     setNotes("");
     setOtherName("");
+    setPhotoDataUrl(undefined);
     setError(null);
     onLogged?.();
   }
@@ -96,7 +119,29 @@ export function CatchLogForm({ onLogged }: { onLogged?: () => void }) {
         </select>
       </div>
 
-      <TextInput label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Bait, tide, conditions…" />
+      <TextInput label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Bait, depth, conditions…" />
+
+      <div className="fk-field">
+        <span className="fk-label">Photo (optional)</span>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className="fk-catchform__fileinput"
+          onChange={handlePhotoChange}
+        />
+        {photoDataUrl ? (
+          <div className="fk-catchform__photopreview">
+            <img src={photoDataUrl} alt="Catch preview" />
+            <Button type="button" variant="secondary" size="sm" onClick={() => setPhotoDataUrl(undefined)}>Remove photo</Button>
+          </div>
+        ) : (
+          <Button type="button" variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()} disabled={photoBusy}>
+            {photoBusy ? "Processing…" : "Add a photo"}
+          </Button>
+        )}
+      </div>
 
       <div className="fk-catchform__toggle">
         <span className="fk-label">{released ? "Released" : "Kept"}</span>

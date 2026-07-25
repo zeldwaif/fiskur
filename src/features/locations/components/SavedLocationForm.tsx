@@ -30,12 +30,12 @@ export function SavedLocationForm({ onAdded }: { onAdded?: () => void }) {
 
   return (
     <form className="fk-locform" onSubmit={handleSubmit} noValidate>
-      <TextInput label="Spot name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. North jetty" />
+      <TextInput label="Spot name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Humber Bay pier" />
       <div className="fk-locform__coords">
-        <TextInput label="Latitude" value={lat} onChange={(e) => setLat(e.target.value)} inputMode="decimal" placeholder="26.1224" />
-        <TextInput label="Longitude" value={lng} onChange={(e) => setLng(e.target.value)} inputMode="decimal" placeholder="-80.1373" />
+        <TextInput label="Latitude" value={lat} onChange={(e) => setLat(e.target.value)} inputMode="decimal" placeholder="43.6350" />
+        <TextInput label="Longitude" value={lng} onChange={(e) => setLng(e.target.value)} inputMode="decimal" placeholder="-79.3750" />
       </div>
-      <TextInput label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Best on outgoing tide" />
+      <TextInput label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Best at first light" />
       {error && <p className="fk-locform__error" role="alert">{error}</p>}
       <Button type="submit" fullWidth>Save location</Button>
     </form>

@@ -19,6 +19,8 @@ export interface CatchLog {
   released: boolean;
   /** ISO timestamp of when the log was created. */
   createdAt: string;
+  /** Optional photo, stored as a downscaled data: URL (no backend, so this stays local). */
+  photoDataUrl?: string;
 }
 
 export interface NewCatchLog {
@@ -32,6 +34,7 @@ export interface NewCatchLog {
   locationName?: string;
   notes?: string;
   released: boolean;
+  photoDataUrl?: string;
 }
 
 export function isCatchLogArray(value: unknown): value is CatchLog[] {

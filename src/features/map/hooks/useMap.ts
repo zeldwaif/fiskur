@@ -1,26 +1,21 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { appConfig } from "@/app/config";
 import { createMapProvider } from "../services/mapService";
 import { useMapContext } from "../context/MapContext";
 import { loadPersistedCamera } from "../services/mapPersistence";
 
-/**
- * Initializes a map provider into a container ref and publishes it to MapContext
- * so sibling components (search, toolbar, layers) can drive the same live map.
- * Restores the last camera position/zoom if one was saved.
- */
 export function useMap(containerRef: React.RefObject<HTMLElement>) {
   const { provider, status, error, setProvider, setStatus, setError } = useMapContext();
-  const initialized = useRef(false);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el || initialized.current) return;
-    initialized.current = true;
+    if (!el) return;
 
+    let cancelled = false;
     const mapProvider = createMapProvider();
     const persisted = loadPersistedCamera();
 
+    setStatus("loading");
     mapProvider
       .initializeMap({
         container: el,
@@ -29,15 +24,18 @@ export function useMap(containerRef: React.RefObject<HTMLElement>) {
         mapType: appConfig.map.defaultMapType,
       })
       .then(() => {
+        if (cancelled) { mapProvider.destroy(); return; }
         setProvider(mapProvider);
         setStatus("ready");
       })
       .catch((e) => {
+        if (cancelled) return;
         setError(e?.message ?? "Map failed to load");
         setStatus("error");
       });
 
     return () => {
+      cancelled = true;
       mapProvider.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

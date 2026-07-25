@@ -31,7 +31,7 @@ export class DemoMapProvider implements MapProvider {
   getCamera(): CameraOptions | null { return null; }
   onCameraChange(_listener: (camera: CameraOptions) => void): () => void { return () => {}; }
   setMapType(_type: MapType): void {}
-  async getCurrentLocation(): Promise<LatLng> { return { lat: 26.1224, lng: -80.1373 }; }
+  async getCurrentLocation(): Promise<LatLng> { return { lat: 43.6350, lng: -79.3750 }; }
   async searchLocation(_query: string): Promise<LatLng | null> { return null; }
   async searchSuggestions(_query: string): Promise<LocationSuggestion[]> { return []; }
   destroy(): void { if (this.container) this.container.innerHTML = ""; }

@@ -25,8 +25,9 @@ export function SpeciesPage() {
       <div className="fk-species">
         <SectionHeader title="Species" />
         <p className="fk-species__note">
-          Reference list for the current demo region (South Florida). Habitat notes are general
-          guidance — always check official size and season regulations before keeping a fish.
+          Reference list for the current demo region (Toronto — Lake Ontario). Habitat notes are
+          general guidance — always check current Ontario size, season and sanctuary regulations
+          before keeping a fish.
         </p>
         <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search species…" />
         <div className="fk-species__grid">

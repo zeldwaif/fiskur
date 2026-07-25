@@ -11,7 +11,7 @@ import type { MarkerOptions } from "../types/map.types";
  */
 export const sampleLayerMarkers: Record<string, MarkerOptions[]> = {
   "catch-reports": [
-    { id: "sample-catch-1", layerId: "catch-reports", position: { lat: 26.1180, lng: -80.1450 }, title: "Snook reported (sample)" },
-    { id: "sample-catch-2", layerId: "catch-reports", position: { lat: 26.1310, lng: -80.1290 }, title: "Redfish reported (sample)" },
+    { id: "sample-catch-1", layerId: "catch-reports", position: { lat: 43.6285, lng: -79.3900 }, title: "Smallmouth bass reported (sample)" },
+    { id: "sample-catch-2", layerId: "catch-reports", position: { lat: 43.6420, lng: -79.3620 }, title: "Northern pike reported (sample)" },
   ],
 };
