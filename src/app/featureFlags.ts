@@ -10,7 +10,7 @@ export const featureFlags = {
   waterConditions: true,
   weather: true,
   commercialMarketplace: false,
-  socialFeatures: false,
+  socialFeatures: true,
   settings: true,
   profile: true,
 } as const;

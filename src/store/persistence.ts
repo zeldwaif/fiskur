@@ -59,6 +59,8 @@ export const storageKeys = {
   savedLocations: "fiskur.savedLocations",
   catches: "fiskur.catches",
   mapCamera: "fiskur.map.camera",
+  profile: "fiskur.profile",
+  friends: "fiskur.friends",
 } as const;
 
 /** Small helper for stable unique ids without pulling in a uuid dependency. */

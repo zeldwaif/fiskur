@@ -10,7 +10,7 @@ import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
 import { fromLonLat, toLonLat } from "ol/proj";
 import { Style, Circle as CircleStyle, Fill, Stroke } from "ol/style";
-import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType, LocationSuggestion } from "../types/map.types";
+import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType, LocationSuggestion, ClickModifiers, MarkerVariant } from "../types/map.types";
 
 /** Free satellite imagery (Esri World Imagery) — no API key required. */
 const ESRI_SATELLITE =
@@ -40,13 +40,43 @@ export class OpenLayersProvider implements MapProvider {
     });
   }
 
+  /**
+   * Marker styling per variant. "pending" is the dropped pin for a catch about to be
+   * logged (deliberately the loudest thing on the map); "live" is the user's own moving
+   * position, drawn as a halo so it reads as "you" rather than as data.
+   */
+  private styleFor(variant: MarkerVariant = "default"): Style {
+    if (variant === "pending") {
+      return new Style({
+        image: new CircleStyle({
+          radius: 11,
+          fill: new Fill({ color: "rgba(0,0,0,0.9)" }),
+          stroke: new Stroke({ color: "#fff", width: 3 }),
+        }),
+      });
+    }
+    if (variant === "live") {
+      return new Style({
+        image: new CircleStyle({
+          radius: 8,
+          fill: new Fill({ color: "#1a73e8" }),
+          stroke: new Stroke({ color: "#fff", width: 3 }),
+        }),
+      });
+    }
+    return new Style({
+      image: new CircleStyle({ radius: 7, fill: new Fill({ color: "#000" }), stroke: new Stroke({ color: "#fff", width: 2 }) }),
+    });
+  }
+
   addMarker(marker: MarkerOptions): void {
+    // Re-adding the same id (e.g. a live position update) should move the marker, not
+    // throw or silently stack a second feature on top of the first.
+    this.removeMarker(marker.id);
     const f = new Feature({ geometry: new Point(fromLonLat([marker.position.lng, marker.position.lat])) });
     f.setId(marker.id);
     f.set("layerId", marker.layerId);
-    f.setStyle(new Style({
-      image: new CircleStyle({ radius: 7, fill: new Fill({ color: "#000" }), stroke: new Stroke({ color: "#fff", width: 2 }) }),
-    }));
+    f.setStyle(this.styleFor(marker.variant));
     this.markerSource.addFeature(f);
   }
   removeMarker(id: string): void {
@@ -86,11 +116,20 @@ export class OpenLayersProvider implements MapProvider {
     this.map.on("moveend", handler);
     return () => this.map?.un("moveend", handler);
   }
-  onMapClick(listener: (position: LatLng) => void): () => void {
+  onMapClick(listener: (position: LatLng, modifiers: ClickModifiers) => void): () => void {
     if (!this.map) return () => {};
     const handler = (e: any) => {
       const [lng, lat] = toLonLat(e.coordinate);
-      listener({ lat, lng });
+      const src: MouseEvent | undefined = e.originalEvent;
+      listener(
+        { lat, lng },
+        {
+          shift: !!src?.shiftKey,
+          alt: !!src?.altKey,
+          ctrl: !!src?.ctrlKey,
+          meta: !!src?.metaKey,
+        },
+      );
     };
     this.map.on("click", handler);
     return () => this.map?.un("click", handler);

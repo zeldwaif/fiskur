@@ -18,6 +18,6 @@ export const navigationItems: NavItem[] = [
   { id: "species", label: "Species", route: "/species", feature: "speciesData" },
   { id: "conditions", label: "Conditions", route: "/conditions", feature: "waterConditions" },
   { id: "commercial", label: "Commercial", route: "/commercial", feature: "commercialMarketplace", placeholder: true },
-  { id: "profile", label: "Profile", route: "/profile", feature: "profile", placeholder: true },
+  { id: "profile", label: "Profile", route: "/profile", feature: "profile" },
   { id: "settings", label: "Settings", route: "/settings", feature: "settings", placeholder: true },
 ];

@@ -57,10 +57,23 @@
 }
 .fk-maphint {
   position: absolute; left: 50%; bottom: var(--spacing-md); transform: translateX(-50%);
+  display: flex; align-items: center; gap: var(--spacing-xs);
   padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--color-surface); border: var(--border-width) solid var(--color-border);
   font-size: var(--font-size-xs); color: var(--color-text-secondary);
   white-space: nowrap; pointer-events: none;
+}
+.fk-maphint__key {
+  font-family: var(--font-primary); font-size: var(--font-size-xs);
+  padding: 1px var(--spacing-xs);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-small);
+  color: var(--color-text-primary);
+}
+/* Active state for a toggled toolbar control (live location). */
+.fk-maptoolbar .fk-iconbtn--active {
+  background: var(--color-text-primary);
+  color: var(--color-surface);
 }
 @media (max-width: 720px) {
   .fk-maphint { display: none; }

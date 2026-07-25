@@ -5,6 +5,8 @@ import type { SavedLocation, NewSavedLocation } from "@/features/locations/types
 import { isSavedLocationArray } from "@/features/locations/types";
 import type { CatchLog, NewCatchLog } from "@/features/catches/types";
 import { isCatchLogArray } from "@/features/catches/types";
+import type { Profile, Friend, NewFriend } from "@/features/profile/types";
+import { isProfile, isFriendArray, defaultProfile } from "@/features/profile/types";
 
 // Re-export so existing imports of SavedLocation from the store keep working.
 export type { SavedLocation };
@@ -14,6 +16,8 @@ interface AppState {
   activeMapLayers: string[];
   savedLocations: SavedLocation[];
   catches: CatchLog[];
+  profile: Profile;
+  friends: Friend[];
 }
 
 type Action =
@@ -24,7 +28,10 @@ type Action =
   | { type: "RENAME_SAVED_LOCATION"; id: string; name: string }
   | { type: "REMOVE_SAVED_LOCATION"; id: string }
   | { type: "ADD_CATCH"; entry: CatchLog }
-  | { type: "REMOVE_CATCH"; id: string };
+  | { type: "REMOVE_CATCH"; id: string }
+  | { type: "UPDATE_PROFILE"; patch: Partial<Profile> }
+  | { type: "ADD_FRIEND"; friend: Friend }
+  | { type: "REMOVE_FRIEND"; id: string };
 
 const initialState: AppState = {
   selectedLocationId: null,
@@ -32,6 +39,8 @@ const initialState: AppState = {
   // Domain data is hydrated from localStorage on first render (see below).
   savedLocations: loadPersisted(storageKeys.savedLocations, isSavedLocationArray, []),
   catches: loadPersisted(storageKeys.catches, isCatchLogArray, []),
+  profile: loadPersisted(storageKeys.profile, isProfile, defaultProfile),
+  friends: loadPersisted(storageKeys.friends, isFriendArray, []),
 };
 
 function reducer(state: AppState, action: Action): AppState {
@@ -66,6 +75,12 @@ function reducer(state: AppState, action: Action): AppState {
       return { ...state, catches: [action.entry, ...state.catches] };
     case "REMOVE_CATCH":
       return { ...state, catches: state.catches.filter((c) => c.id !== action.id) };
+    case "UPDATE_PROFILE":
+      return { ...state, profile: { ...state.profile, ...action.patch } };
+    case "ADD_FRIEND":
+      return { ...state, friends: [action.friend, ...state.friends] };
+    case "REMOVE_FRIEND":
+      return { ...state, friends: state.friends.filter((f) => f.id !== action.id) };
     default:
       return state;
   }
@@ -86,6 +101,9 @@ interface AppStoreValue extends AppState {
   removeSavedLocation: (id: string) => void;
   addCatch: (input: NewCatchLog) => CatchLog;
   removeCatch: (id: string) => void;
+  updateProfile: (patch: Partial<Profile>) => void;
+  addFriend: (input: NewFriend) => Friend;
+  removeFriend: (id: string) => void;
 }
 
 const AppStoreContext = createContext<AppStoreValue | null>(null);
@@ -105,6 +123,14 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
     const result = savePersisted(storageKeys.catches, state.catches);
     if (!result.ok) setStorageError(result.reason);
   }, [state.catches]);
+  useEffect(() => {
+    const result = savePersisted(storageKeys.profile, state.profile);
+    if (!result.ok) setStorageError(result.reason);
+  }, [state.profile]);
+  useEffect(() => {
+    const result = savePersisted(storageKeys.friends, state.friends);
+    if (!result.ok) setStorageError(result.reason);
+  }, [state.friends]);
 
   const value = useMemo<AppStoreValue>(
     () => ({
@@ -126,6 +152,13 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
         return entry;
       },
       removeCatch: (id) => dispatch({ type: "REMOVE_CATCH", id }),
+      updateProfile: (patch) => dispatch({ type: "UPDATE_PROFILE", patch }),
+      addFriend: (input) => {
+        const friend: Friend = { ...input, id: makeId("friend"), addedAt: new Date().toISOString() };
+        dispatch({ type: "ADD_FRIEND", friend });
+        return friend;
+      },
+      removeFriend: (id) => dispatch({ type: "REMOVE_FRIEND", id }),
     }),
     [state, storageError],
   );

@@ -1,4 +1,4 @@
-import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType, LocationSuggestion } from "../types/map.types";
+import type { MapProvider, MapInitOptions, MarkerOptions, CameraOptions, LatLng, MapType, LocationSuggestion , ClickModifiers} from "../types/map.types";
 
 let scriptPromise: Promise<void> | null = null;
 function loadGoogleMaps(apiKey: string): Promise<void> {
@@ -68,11 +68,15 @@ export class GoogleMapsProvider implements MapProvider {
     });
     return () => l.remove();
   }
-  onMapClick(listener: (position: LatLng) => void): () => void {
+  onMapClick(listener: (position: LatLng, modifiers: ClickModifiers) => void): () => void {
     if (!this.map) return () => {};
     const l = this.map.addListener("click", (e: any) => {
       if (!e.latLng) return;
-      listener({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+      const src: MouseEvent | undefined = e.domEvent;
+      listener(
+        { lat: e.latLng.lat(), lng: e.latLng.lng() },
+        { shift: !!src?.shiftKey, alt: !!src?.altKey, ctrl: !!src?.ctrlKey, meta: !!src?.metaKey },
+      );
     });
     return () => l.remove();
   }
