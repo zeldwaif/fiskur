@@ -1,17 +1,18 @@
-import { Panel, SectionHeader, DataRow, Badge } from "@/components/ui";
+import { Panel, SectionHeader, DataRow } from "@/components/ui";
 import { LoadingState, ErrorState } from "@/components/feedback";
 import { useWeather } from "../hooks/useWeather";
-import { appConfig } from "@/app/config";
 
-export function WeatherPanel() {
-  const { lat, lng } = appConfig.map.defaultCenter;
+export function WeatherPanel({ lat, lng }: { lat: number; lng: number }) {
   const { data, status } = useWeather(lat, lng);
   if (status === "loading") return <Panel><LoadingState /></Panel>;
-  if (status === "error" || !data) return <Panel><ErrorState message="Weather unavailable." /></Panel>;
+  if (status === "error" || !data) {
+    return <Panel><ErrorState message="Weather unavailable — check your connection and try again." /></Panel>;
+  }
   return (
     <Panel>
-      <SectionHeader title="Weather" action={data.updatedAt === "sample" ? <Badge>Sample data</Badge> : null} />
-      <DataRow label="Air temperature" value={`${data.temperatureF} °F`} />
+      <SectionHeader title="Weather" />
+      <DataRow label="Conditions" value={data.conditionLabel} />
+      <DataRow label="Air temperature" value={`${data.temperatureF}°F`} />
       <DataRow label="Wind" value={`${data.windMph} mph ${data.windDirection}`} />
     </Panel>
   );

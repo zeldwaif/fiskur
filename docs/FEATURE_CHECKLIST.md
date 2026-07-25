@@ -28,9 +28,9 @@ point of the modular architecture is that each tier can ship and be used on its 
 - [ ] Photo attach to a catch log entry
 - [ ] Offline logging with later sync (log a catch with no signal, sync when back online)
 - [x] **Species reference data** — basic species list with name, habitat, a photo (`features/species`)
-- [ ] **Water/weather conditions panel** — real API wired in place of sample data (`features/weather`, `features/conditions`)
-- [ ] Tide data integration
-- [ ] Basic "what should I fish for" recommendation — even a simple rules-based version (species + condition match, no ML needed yet)
+- [x] **Water/weather conditions panel** — real API wired in place of sample data (`features/weather`, `features/conditions`)
+- [x] Tide data integration
+- [x] Basic "what should I fish for" recommendation — even a simple rules-based version (species + condition match, no ML needed yet)
 - [ ] Regulation lookup placeholder → real data source for size/season limits by species + region
 
 ## Tier 2 — Accounts & real data persistence

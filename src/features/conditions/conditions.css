@@ -1,0 +1,8 @@
+.fk-conditions { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.fk-conditions__note { margin: 0; font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.fk-conditions__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-md);
+  align-items: start;
+}
