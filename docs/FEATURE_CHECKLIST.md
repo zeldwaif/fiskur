@@ -38,7 +38,7 @@ point of the modular architecture is that each tier can ship and be used on its 
 
 - [ ] User accounts (sign up / log in)
 - [ ] Real data storage (replace in-memory `appStore` with a backend or persistent local store)
-- [ ] **Profile page** — real content: catch history, personal stats, saved locations (`features/profile`)
+- [x] **Profile page** — real content: catch history, personal stats, saved locations (`features/profile`)
 - [ ] **Settings page** — real content: units (metric/imperial), theme selection, notification preferences (`features/settings`)
 - [ ] Data export (download your own catch log/data)
 - [ ] Account deletion / data deletion flow
@@ -46,11 +46,11 @@ point of the modular architecture is that each tier can ship and be used on its 
 ## Tier 3 — Social & gamification
 *What turns a utility into something people come back to.*
 
-- [ ] Friends / following
+- [~] Friends / following — local-only list built; real following needs accounts (Tier 2)
 - [ ] Share a catch (with location privacy controls — exact vs. fuzzed vs. hidden)
 - [ ] Location reviews (fishing spots, ramps, marinas)
 - [ ] Gear/charter reviews
-- [ ] Species collection / achievement system ("FishDex"-style), tied to verified logs
+- [x] Species collection / achievement system ("FishDex"-style), tied to verified logs
 - [ ] Leaderboards — explicitly NOT just biggest/most fish (release rate, diversity, consistency)
 - [ ] Clubs / groups
 - [ ] Basic event/trip planning between friends

@@ -22,14 +22,24 @@ lose that comparison. Open with the honesty angle, because that's the part you c
 
 1. **Map** — Toronto Harbour, satellite. Search a spot. Point out it's OpenStreetMap +
    Esri imagery: no API key, no billing account, works anywhere on earth.
-2. **Tap the water → "Log a catch here."** This is the money shot. Fill in a species,
-   snap/attach a photo, save. Then show the catch appearing as a pin on the map *and* in
-   the log. Say: *"The catch is pinned to the exact coordinate where it happened, not to a
+2. **Shift+click the water → "Log a catch here."** This is the money shot. A pin drops at
+   the exact point, the panel opens prefilled with that coordinate. Fill in a species,
+   attach a photo, save. Then show the catch appearing as a pin on the map *and* in the
+   log. Say: *"The catch is pinned to the exact coordinate where it happened, not to a
    named spot we picked from a list afterwards."*
-3. **Fishing Logs** — click the photo thumbnail, it opens full size.
-4. **Conditions** — live Toronto weather, real sunrise/sunset, and the ranked
+   (Shift is deliberate: plain click has to stay panning, because that's the gesture people
+   use constantly. The rare, deliberate action is the one that gets the modifier.)
+3. **Live location** — the ⦿ toolbar button starts real `watchPosition` tracking, drawn as
+   a blue dot that follows you. Opt-in, not on by default: continuous GPS is a privacy and
+   battery cost the user should choose to pay.
+4. **Profile** — real stats computed from the log (catches, species collection, release
+   rate, personal best), plus the friends list. Be upfront: *"Friends are device-local —
+   there's no server yet, so nothing is sent anywhere and the UI says so. We built the
+   shape a social graph needs without faking the graph."*
+5. **Fishing Logs** — click the photo thumbnail, it opens full size.
+6. **Conditions** — live Toronto weather, real sunrise/sunset, and the ranked
    recommendations with the reasons visible under each fish.
-5. Land on the two answers below.
+7. Land on the two answers below.
 
 ---
 
