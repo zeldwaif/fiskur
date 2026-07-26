@@ -44,10 +44,18 @@ lose that comparison. Open with the honesty angle, because that's the part you c
    Say: *"Every social fishing app has unverifiable catch reports, which is why their
    leaderboards are a joke and their hot-spot data is polluted. We turn a claim into
    evidence — the photo independently says where and when it was taken."*
-6. **Fishing Logs** — click the photo thumbnail, it opens full size.
-7. **Conditions** — live Toronto weather, real sunrise/sunset, and the ranked
+6. **Leaderboard — the payoff.** Verified catches only. Four categories, and the winner
+   changes depending on which one you pick: Theo tops "Biggest fish" but comes last on
+   "Species diversity"; Priya wins diversity and release rate but has the smallest fish.
+   Say: *"Ranking on size alone rewards killing large old breeding fish. We rank on
+   diversity, release rate and consistency too — that's a values choice written into the
+   software. And nothing counts unless it's verified, which is what makes the board mean
+   anything at all."*
+   Point at your own row sitting unranked with the reason printed next to it.
+7. **Fishing Logs** — click the photo thumbnail, it opens full size.
+8. **Conditions** — live Toronto weather, real sunrise/sunset, and the ranked
    recommendations with the reasons visible under each fish.
-8. Land on the two answers below.
+9. Land on the two answers below.
 
 ---
 
@@ -124,6 +132,7 @@ Do not pretend these don't exist. Getting caught hiding one is worse than any of
 | "Why three map providers?" | The provider interface means we can swap OpenLayers for Google if the free tier stops being enough, without touching feature code. Today it runs entirely on free, keyless sources. |
 | "Isn't this just Fishbrain?" | Fishbrain wins on prediction because they have the catch data. We're not competing there — see the regulations answer. |
 | "Can't someone fake a verified catch?" | Yes, with effort — you could edit EXIF. It raises the cost of lying from zero to non-trivial, which is the whole point. And we never accuse: a photo with no GPS is "unverified", a neutral state, not a fraud flag. |
+| "Are those other anglers real?" | No, and every row says "sample data" in the UI — there's no backend, so real competitors would be a lie. Only your row is real, and it's scored by the same function as everyone else's, so the ranking can't quietly flatter you. |
 | "What if the photo has no GPS?" | Very common — phones and messaging apps strip it. That catch is simply unverified. The feature adds a signal when one exists; it never punishes its absence. |
 
 ---

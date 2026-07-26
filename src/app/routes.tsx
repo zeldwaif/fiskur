@@ -5,6 +5,7 @@ import { LogsPage } from "@/features/catches/LogsPage";
 import { SpeciesPage } from "@/features/species/SpeciesPage";
 import { ConditionsPage } from "@/features/conditions/ConditionsPage";
 import { CommercialPage } from "@/features/commercial/CommercialPage";
+import { LeaderboardPage } from "@/features/leaderboard/LeaderboardPage";
 import { ProfilePage } from "@/features/profile/ProfilePage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
 
@@ -17,6 +18,7 @@ export const appRoutes: RouteObject[] = [
   { path: "/species", element: <SpeciesPage /> },
   { path: "/conditions", element: <ConditionsPage /> },
   { path: "/commercial", element: <CommercialPage /> },
+  { path: "/leaderboard", element: <LeaderboardPage /> },
   { path: "/profile", element: <ProfilePage /> },
   { path: "/settings", element: <SettingsPage /> },
   { path: "*", element: <Navigate to="/map" replace /> },

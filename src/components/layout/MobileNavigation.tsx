@@ -5,9 +5,10 @@ import "./layout.css";
 
 /** Mobile navigation — reads the SAME config as the desktop Sidebar. */
 export function MobileNavigation() {
-  const items = navigationItems
-    .filter((item) => !item.feature || isFeatureEnabled(item.feature))
-    .slice(0, 5);
+  const enabled = navigationItems.filter((item) => !item.feature || isFeatureEnabled(item.feature));
+  // Prefer the explicitly-flagged primary items; fall back to the first few if none are set.
+  const primary = enabled.filter((item) => item.mobilePrimary);
+  const items = (primary.length > 0 ? primary : enabled).slice(0, 5);
   return (
     <nav className="fk-mobilenav" aria-label="Primary">
       {items.map((item) => (
