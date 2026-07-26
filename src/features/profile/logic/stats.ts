@@ -3,6 +3,8 @@ import { species as allSpecies } from "@/features/catches/data/species";
 
 export interface AnglerStats {
   totalCatches: number;
+  /** Catches whose photo EXIF corroborated the logged place and time. */
+  verifiedCatches: number;
   speciesLogged: number;
   speciesTotal: number;
   releaseRate: number | null;
@@ -33,6 +35,7 @@ export function computeStats(catches: CatchLog[]): AnglerStats {
 
   return {
     totalCatches: catches.length,
+    verifiedCatches: catches.filter((c) => c.verification?.level === "verified").length,
     speciesLogged,
     speciesTotal: allSpecies.length,
     releaseRate: catches.length ? Math.round((released / catches.length) * 100) : null,

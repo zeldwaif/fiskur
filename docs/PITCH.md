@@ -36,10 +36,18 @@ lose that comparison. Open with the honesty angle, because that's the part you c
    rate, personal best), plus the friends list. Be upfront: *"Friends are device-local —
    there's no server yet, so nothing is sent anywhere and the UI says so. We built the
    shape a social graph needs without faking the graph."*
-5. **Fishing Logs** — click the photo thumbnail, it opens full size.
-6. **Conditions** — live Toronto weather, real sunrise/sunset, and the ranked
+5. **Catch verification — the one nobody has seen before.** Attach a photo to a catch and
+   the app reads the photo's own EXIF GPS and timestamp and cross-checks them against what
+   you typed: *"Photo GPS matches this spot (within 40 m) · taken within 12 min of the
+   logged time"* → **Verified**. Change the spot and watch it drop to *"Photo GPS is 11.9 km
+   away"* → **Doesn't match**.
+   Say: *"Every social fishing app has unverifiable catch reports, which is why their
+   leaderboards are a joke and their hot-spot data is polluted. We turn a claim into
+   evidence — the photo independently says where and when it was taken."*
+6. **Fishing Logs** — click the photo thumbnail, it opens full size.
+7. **Conditions** — live Toronto weather, real sunrise/sunset, and the ranked
    recommendations with the reasons visible under each fish.
-7. Land on the two answers below.
+8. Land on the two answers below.
 
 ---
 
@@ -115,6 +123,8 @@ Do not pretend these don't exist. Getting caught hiding one is worse than any of
 | "Is the species data sourced?" | It's regionally-accurate general angling knowledge, not cited research. It drives the picker and the heuristic. Same standard as the regulations answer: we'd cite it before we'd claim authority. |
 | "Why three map providers?" | The provider interface means we can swap OpenLayers for Google if the free tier stops being enough, without touching feature code. Today it runs entirely on free, keyless sources. |
 | "Isn't this just Fishbrain?" | Fishbrain wins on prediction because they have the catch data. We're not competing there — see the regulations answer. |
+| "Can't someone fake a verified catch?" | Yes, with effort — you could edit EXIF. It raises the cost of lying from zero to non-trivial, which is the whole point. And we never accuse: a photo with no GPS is "unverified", a neutral state, not a fraud flag. |
+| "What if the photo has no GPS?" | Very common — phones and messaging apps strip it. That catch is simply unverified. The feature adds a signal when one exists; it never punishes its absence. |
 
 ---
 

@@ -25,11 +25,16 @@ export function ProfileStats() {
           <StatCell label="Catches" value={String(stats.totalCatches)} />
           <StatCell label="Species" value={`${stats.speciesLogged}/${stats.speciesTotal}`} />
           <StatCell label="Spots saved" value={String(savedLocations.length)} />
+          <StatCell label="Verified" value={String(stats.verifiedCatches)} />
           <StatCell
             label="Released"
             value={stats.releaseRate == null ? "—" : `${stats.releaseRate}%`}
           />
         </div>
+        <p className="fk-profile__note">
+          "Verified" means a catch photo's own GPS and timestamp independently corroborated
+          where and when you said you caught it.
+        </p>
         {stats.biggest && (
           <p className="fk-profile__note">
             Personal best: {stats.biggest.speciesName} · {stats.biggest.weightKg} kg

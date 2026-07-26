@@ -78,3 +78,39 @@
   margin: 0; font-size: var(--font-size-sm); color: var(--color-text-secondary);
   font-variant-numeric: tabular-nums;
 }
+
+/* --- catch verification ---
+   Colour is intentionally restrained: "unverified" is a neutral, extremely common state
+   and must not read as a warning. Only a real contradiction gets the alarming treatment. */
+.fk-verify {
+  border: var(--border-width) solid var(--color-border);
+  border-left-width: 3px;
+  padding: var(--spacing-sm);
+}
+.fk-verify__label { font-size: var(--font-size-sm); font-weight: 600; }
+.fk-verify__reasons {
+  list-style: none; margin: var(--spacing-xs) 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 2px;
+  font-size: var(--font-size-xs); color: var(--color-text-secondary); line-height: 1.5;
+}
+.fk-verify--verified { border-left-color: var(--color-success, #1a7f37); }
+.fk-verify--partial { border-left-color: var(--color-text-secondary); }
+.fk-verify--unverified { border-left-color: var(--color-border); }
+.fk-verify--mismatch { border-left-color: var(--color-danger, #b00); }
+
+.fk-verifytag {
+  display: inline-block; padding: 0 var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  border: var(--border-width) solid var(--color-border);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+.fk-verifytag--verified {
+  border-color: var(--color-success, #1a7f37);
+  color: var(--color-success, #1a7f37);
+  font-weight: 600;
+}
+.fk-verifytag--mismatch { border-color: var(--color-danger, #b00); color: var(--color-danger, #b00); }
+.fk-verifytag--unverified { opacity: var(--opacity-muted, 0.7); }
+
+.fk-catchrow__top { flex-wrap: wrap; }

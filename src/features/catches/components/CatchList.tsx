@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/feedback";
 import { useCatchLog } from "../hooks/useCatchLog";
 import { PhotoLightbox } from "./PhotoLightbox";
 import type { CatchLog } from "../types";
+import { VERIFICATION_LABEL } from "../verification";
 
 function formatWhen(iso: string): string {
   const d = new Date(iso);
@@ -36,6 +37,11 @@ function CatchRow({ entry, onOpenPhoto }: { entry: CatchLog; onOpenPhoto: (entry
         <div className="fk-catchrow__top">
           <span className="fk-catchrow__species">{entry.speciesName}</span>
           <Badge>{entry.released ? "Released" : "Kept"}</Badge>
+          {entry.verification && (
+            <span className={`fk-verifytag fk-verifytag--${entry.verification.level}`}>
+              {VERIFICATION_LABEL[entry.verification.level]}
+            </span>
+          )}
         </div>
         <span className="fk-catchrow__meta">
           {formatWhen(entry.caughtAt)}

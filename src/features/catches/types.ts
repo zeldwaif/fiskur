@@ -1,3 +1,5 @@
+import type { CatchVerification } from "./verification";
+
 /** A single logged catch. */
 export interface CatchLog {
   id: string;
@@ -21,6 +23,11 @@ export interface CatchLog {
   createdAt: string;
   /** Optional photo, stored as a downscaled data: URL (no backend, so this stays local). */
   photoDataUrl?: string;
+  /**
+   * Result of cross-checking the photo's EXIF against the logged position and time.
+   * Absent for catches logged without a photo, or logged before this feature existed.
+   */
+  verification?: CatchVerification;
 }
 
 export interface NewCatchLog {
@@ -35,6 +42,7 @@ export interface NewCatchLog {
   notes?: string;
   released: boolean;
   photoDataUrl?: string;
+  verification?: CatchVerification;
 }
 
 export function isCatchLogArray(value: unknown): value is CatchLog[] {

@@ -1,9 +1,11 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
 import { Button, TextInput, Toggle } from "@/components/ui";
 import { useCatchLog } from "../hooks/useCatchLog";
 import { species, getSpecies, OTHER_SPECIES_ID } from "../data/species";
 import { useSavedLocations } from "@/features/locations/hooks/useSavedLocations";
 import { readAndDownscaleImage } from "../photo";
+import { readExif, type ExifData } from "../exif";
+import { verifyCatch, verificationReasons, VERIFICATION_LABEL } from "../verification";
 
 /** Current local datetime as a value for <input type="datetime-local">. */
 function nowLocal(): string {
@@ -37,8 +39,27 @@ export function CatchLogForm({ onLogged, presetPosition, presetLabel }: CatchLog
   const [notes, setNotes] = useState("");
   const [released, setReleased] = useState(true);
   const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>(undefined);
+  const [photoExif, setPhotoExif] = useState<ExifData | null>(null);
   const [photoBusy, setPhotoBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // The position this catch will actually be saved with — a dropped map pin wins over a
+  // saved spot, and verification has to check against whichever one is in play.
+  const resolvedPosition = useMemo(() => {
+    if (presetPosition) return presetPosition;
+    const loc = savedLocations.find((l) => l.id === locationId);
+    return loc ? { lat: loc.lat, lng: loc.lng } : null;
+  }, [presetPosition, savedLocations, locationId]);
+
+  // Recomputed live so the user sees the verdict before saving, not after.
+  const verification = useMemo(() => {
+    if (!photoExif) return null;
+    return verifyCatch({
+      exif: photoExif,
+      position: resolvedPosition,
+      caughtAt: new Date(caughtAt).toISOString(),
+    });
+  }, [photoExif, resolvedPosition, caughtAt]);
 
   async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -48,7 +69,9 @@ export function CatchLogForm({ onLogged, presetPosition, presetLabel }: CatchLog
     setPhotoBusy(true);
     setError(null);
     try {
-      const dataUrl = await readAndDownscaleImage(file);
+      // EXIF must be read from the ORIGINAL file: the canvas downscale below discards it.
+      const [exif, dataUrl] = await Promise.all([readExif(file), readAndDownscaleImage(file)]);
+      setPhotoExif(exif);
       setPhotoDataUrl(dataUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't process that photo.");
@@ -84,6 +107,7 @@ export function CatchLogForm({ onLogged, presetPosition, presetLabel }: CatchLog
       notes: notes.trim() || undefined,
       released,
       photoDataUrl,
+      verification: verification ?? undefined,
     });
 
     setLength("");
@@ -91,6 +115,7 @@ export function CatchLogForm({ onLogged, presetPosition, presetLabel }: CatchLog
     setNotes("");
     setOtherName("");
     setPhotoDataUrl(undefined);
+    setPhotoExif(null);
     setError(null);
     onLogged?.();
   }
@@ -155,7 +180,14 @@ export function CatchLogForm({ onLogged, presetPosition, presetLabel }: CatchLog
         {photoDataUrl ? (
           <div className="fk-catchform__photopreview">
             <img src={photoDataUrl} alt="Catch preview" />
-            <Button type="button" variant="secondary" size="sm" onClick={() => setPhotoDataUrl(undefined)}>Remove photo</Button>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => { setPhotoDataUrl(undefined); setPhotoExif(null); }}
+            >
+              Remove photo
+            </Button>
           </div>
         ) : (
           <Button type="button" variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()} disabled={photoBusy}>
@@ -163,6 +195,17 @@ export function CatchLogForm({ onLogged, presetPosition, presetLabel }: CatchLog
           </Button>
         )}
       </div>
+
+      {verification && (
+        <div className={`fk-verify fk-verify--${verification.level}`}>
+          <span className="fk-verify__label">{VERIFICATION_LABEL[verification.level]}</span>
+          <ul className="fk-verify__reasons">
+            {verificationReasons(verification).map((r) => (
+              <li key={r}>{r}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="fk-catchform__toggle">
         <span className="fk-label">{released ? "Released" : "Kept"}</span>

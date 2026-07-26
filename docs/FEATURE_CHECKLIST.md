@@ -52,6 +52,7 @@ point of the modular architecture is that each tier can ship and be used on its 
 - [ ] Gear/charter reviews
 - [x] Species collection / achievement system ("FishDex"-style), tied to verified logs
 - [ ] Leaderboards — explicitly NOT just biggest/most fish (release rate, diversity, consistency)
+- [x] **Catch verification** — cross-check photo EXIF GPS/timestamp against the logged catch (`features/catches/verification.ts`)
 - [ ] Clubs / groups
 - [ ] Basic event/trip planning between friends
 
