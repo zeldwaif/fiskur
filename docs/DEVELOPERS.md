@@ -1,8 +1,7 @@
-# Fiskur — Developer Guide
+# Fiskur developer guide
 
-A modular, feature-based React + TypeScript app built as a **replaceable black-and-white template**.
-The monochrome look is a neutral starting point, not the final brand. Everything visual is
-driven by design tokens so the whole direction can change by editing one place.
+Fiskur is a feature-based React and TypeScript app. All colours, spacing and type come from
+design tokens in `src/theme/tokens.css`, so the visual style can change in one place.
 
 ## Project structure
 
